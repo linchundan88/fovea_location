@@ -1,17 +1,14 @@
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
-import torch
 import torch.nn as nn
 import torch.optim as optim
-import torch_optimizer as optim_plus
 # from warmup_scheduler import GradualWarmupScheduler
-from torch.optim.lr_scheduler import StepLR, CosineAnnealingLR
+from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import DataLoader
 from LIBS.Dataset.my_dataset import Dataset_CSV
-from LIBS.NeuralNetworks.my_train import train_regression
+from LIBS.NeuralNetworks.Helper.my_train import train_regression
 from imgaug import augmenters as iaa
-import albumentations as A
 import pretrainedmodels
 
 
@@ -66,7 +63,7 @@ save_model_dir = '/tmp2/fovea_location_models_2020_11_4_3'
 train_times = 2
 # 'xception', 'inceptionresnetv2', 'inceptionv3'
 for i in range(train_times):
-    for model_name in ['xception', 'inceptionresnetv2', 'inceptionv3', 'nasnetamobile']:
+    for model_name in ['xception', 'inceptionresnetv2', 'inceptionv3']:
         model = pretrainedmodels.__dict__[model_name](num_classes=1000, pretrained='imagenet')
         num_filters = model.last_linear.in_features
         model.last_linear = nn.Linear(num_filters, num_regression)
